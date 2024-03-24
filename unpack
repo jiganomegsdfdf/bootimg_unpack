@@ -8,7 +8,7 @@ else
   boot=$1
 fi
 echo "Boot = $boot"
-umkbootimg $boot
+./umkbootimg $boot
 
 dir=${boot%.*}
 mkdir -p "$dir"
@@ -16,5 +16,5 @@ mkdir -p "$dir"
 mv initramfs.cpio.gz "$dir/ramdisk.cpio.gz"
 mv zImage "$dir/zImage"
 cd $dir
-unpack_ramdisk ramdisk.cpio.gz
+./unpack_ramdisk ramdisk.cpio.gz
 exit 0
