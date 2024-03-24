@@ -1,0 +1,31 @@
+# This is a basic workflow to help you get started with Actions
+
+name: unpack
+
+on:
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  boot:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix: 
+        name: ["hyper","miui"]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Un-gzip boot
+        run: sudo gzip -d ${{ matrix.name }}.img.gz
+        
+      - name: Unpack boot
+        run: sudo chmod +x ./* && ./unpack ${{ matrix.name }}.img
+
+      - name: Pack boot packages
+        run: sudo tar -zcvf ${{ matrix.name }}.tar.gz ${{ matrix.name }}/
+
+      - name: Upload boot packages
+        uses: actions/upload-artifact@v4.0.0
+        with:
+          name: ${{ matrix.name }}
+          path: ${{ github.workspace }}/${{ matrix.name }}.tar.gz
